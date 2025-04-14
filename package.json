@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "build": "next build",
+    "build": "next build --turbopack",
     "check": "biome check --write .",
     "dev": "next dev --turbopack",
     "env:dev": "vercel env pull .env",
