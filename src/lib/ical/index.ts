@@ -38,7 +38,7 @@ export const parseEvents = async () => {
   const rawEvents = [];
 
   for (const event of Object.values(events)) {
-    if (event.type !== 'VEVENT') continue;
+    if (!event || event.type !== 'VEVENT') continue;
     const eventStart = event.start;
     if (!eventStart) continue;
     if (isBefore(eventStart, start)) continue;

@@ -4,5 +4,5 @@ onlyBuiltDependencies:
   - sharp
 
 overrides:
-  axios@<1.12.0: '>=1.12.0'
+  dompurify: '>=3.3.2'
   form-data@>=4.0.0 <4.0.4: '>=4.0.4'
