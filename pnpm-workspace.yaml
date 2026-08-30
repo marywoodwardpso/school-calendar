@@ -1,8 +1,8 @@
-onlyBuiltDependencies:
-  - '@biomejs/biome'
-  - core-js
-  - sharp
+allowBuilds:
+  '@biomejs/biome': true
+  core-js: true
+  sharp: true
 
 overrides:
-  dompurify: '>=3.3.2'
+  jspdf>dompurify: '>=3.4.13'
   form-data@>=4.0.0 <4.0.4: '>=4.0.4'
