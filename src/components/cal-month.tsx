@@ -9,19 +9,16 @@ function classNames(...classes: (string | boolean)[]) {
 interface Props {
   events: CalendarEvent[];
   month: string;
-  monthIdx: number;
 }
 
-export const CalMonth = ({ events = [], month, monthIdx }: Props) => {
+export const CalMonth = ({ events = [], month }: Props) => {
   const days = buildDates(events, month);
 
   return (
-    <div className={classNames('mt-4 md:grid md:grid-cols-2 md:h-64 md:divide-gray-200')}>
-      <div className='md:p-2'>
-        <div className='flex items-center text-center'>
-          <div className='flex-auto text-sm font-semibold text-gray-900'>{month}</div>
-        </div>
-        <div className='mt-2 grid grid-cols-7 font-semibold text-center text-xs text-gray-700'>
+    <article className='overflow-hidden rounded-2xl bg-white p-4 shadow-[0_0_0_1px_rgba(15,23,42,0.06),0_1px_2px_rgba(15,23,42,0.06),0_8px_24px_rgba(15,23,42,0.04)] sm:grid sm:grid-cols-[minmax(0,1.1fr)_minmax(10rem,0.9fr)] sm:gap-5 sm:p-5 dark:bg-slate-900 dark:shadow-[0_0_0_1px_rgba(255,255,255,0.09)]'>
+      <div>
+        <h2 className='text-center text-base font-bold text-slate-950 dark:text-white'>{month}</h2>
+        <div className='mt-3 grid grid-cols-7 text-center text-xs font-semibold text-slate-500 dark:text-slate-400'>
           <div>S</div>
           <div>M</div>
           <div>T</div>
@@ -30,48 +27,56 @@ export const CalMonth = ({ events = [], month, monthIdx }: Props) => {
           <div>F</div>
           <div>S</div>
         </div>
-        <div className='mt-1 grid grid-cols-7 text-sm'>
+        <div className='mt-1 grid grid-cols-7 text-sm tabular-nums'>
           {days.map((day, dayIdx) => (
-            <div key={day.date} className={classNames(dayIdx > 6 && 'border-t border-gray-200', 'py-2')}>
-              <button
-                type='button'
+            <div
+              key={day.date}
+              className={classNames(
+                dayIdx > 6 && 'border-t border-slate-200 dark:border-slate-700',
+                'flex min-h-10 items-center justify-center py-1',
+              )}
+            >
+              <time
+                dateTime={day.date}
                 className={classNames(
                   day.hasEvent && 'text-white',
-                  !day.hasEvent && day.isToday && 'text-amber-500',
-                  !day.hasEvent && !day.isToday && day.isCurrentMonth && 'text-gray-900',
-
-                  !day.isToday && !day.isCurrentMonth && 'text-gray-400',
-                  day.hasEvent && day.isCurrentMonth && day.isToday && 'bg-amber-500',
-                  day.hasEvent && day.isCurrentMonth && !day.isToday && 'bg-sky-300',
-                  !day.hasEvent && 'hover:bg-sky-100',
+                  !day.hasEvent && day.isToday && 'text-amber-600 dark:text-amber-400',
+                  !day.hasEvent && !day.isToday && day.isCurrentMonth && 'text-slate-800 dark:text-slate-200',
+                  !day.isToday && !day.isCurrentMonth && 'text-slate-300 dark:text-slate-700',
+                  day.hasEvent &&
+                    day.isCurrentMonth &&
+                    day.isToday &&
+                    'bg-amber-500 dark:bg-amber-400 dark:text-amber-950',
+                  day.hasEvent && day.isCurrentMonth && !day.isToday && 'bg-sky-600 dark:bg-sky-400 dark:text-sky-950',
                   (day.hasEvent || day.isToday) && 'font-semibold',
-                  'mx-auto flex h-5 w-5 items-center justify-center rounded-full',
+                  'flex size-7 items-center justify-center rounded-full',
                 )}
               >
-                <time dateTime={day.date}>{day.isCurrentMonth && day.day}</time>
-              </button>
+                {day.isCurrentMonth && day.day}
+              </time>
             </div>
           ))}
         </div>
       </div>
-      <section className={classNames(monthIdx < 6 && '-order-1 text-right', 'mt-12 md:mt-0 md:p-1')}>
-        <h2 className='text-base font-semibold text-gray-900'>Schedule for {month}</h2>
-        <ol className='mt-1 space-y-0 text-sm text-gray-500'>
-          {events.map((event, eventIdx) => (
-            <li
-              // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-              key={eventIdx}
-              className='group flex items-center space-x-4 rounded-xl py-px px-0 focus-within:bg-gray-100 hover:bg-gray-100'
-            >
-              <div className='flex-auto'>
-                <p className='text-gray-900 text-xs'>
-                  <span className='font-semibold'>{event.shortDate}</span> {event.title}
-                </p>
-              </div>
-            </li>
-          ))}
-        </ol>
+      <section className='mt-5 border-t border-slate-200 pt-4 sm:mt-0 sm:border-t-0 sm:border-l sm:pt-0 sm:pl-5 dark:border-slate-700'>
+        <h3 className='text-sm font-semibold text-slate-950 dark:text-white'>Schedule</h3>
+        {events.length > 0 ? (
+          <ol className='mt-2 space-y-2'>
+            {events.map((event, eventIdx) => (
+              <li
+                // biome-ignore lint/suspicious/noArrayIndexKey: Events do not include a stable identifier.
+                key={eventIdx}
+                className='text-pretty text-sm leading-5 text-slate-600 dark:text-slate-300'
+              >
+                <span className='font-semibold tabular-nums text-slate-950 dark:text-slate-100'>{event.shortDate}</span>{' '}
+                {event.title}
+              </li>
+            ))}
+          </ol>
+        ) : (
+          <p className='mt-2 text-sm text-slate-500 dark:text-slate-400'>No events scheduled.</p>
+        )}
       </section>
-    </div>
+    </article>
   );
 };
